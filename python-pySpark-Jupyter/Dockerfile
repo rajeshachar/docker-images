@@ -1,13 +1,17 @@
-FROM jupyter/base-notebook:latest
+FROM jupyter/pyspark-notebook:latest
 
-# Install Java (required by Spark)
 USER root
-RUN apt-get update && apt-get install -y openjdk-11-jdk && rm -rf /var/lib/apt/lists/*
 
-# Set Java environment variables
-ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+# Install OpenJDK 17
+RUN apt-get update && \
+    apt-get install -y openjdk-17-jdk && \
+    rm -rf /var/lib/apt/lists/*
+
+# Set JAVA_HOME
+ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 ENV PATH=$JAVA_HOME/bin:$PATH
 
-# Install PySpark
 USER $NB_UID
-RUN pip install pyspark findspark
+
+# Install PySpark (if not already installed)
+RUN pip install pyspark
